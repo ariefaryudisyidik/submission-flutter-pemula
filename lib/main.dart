@@ -11,7 +11,7 @@ class MovieApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'MovieApp',
-      theme: ThemeData(),
+      theme: ThemeData(fontFamily: 'MaisonNeue'),
       home: const HomeScreen(),
     );
   }

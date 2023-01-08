@@ -14,6 +14,7 @@ class Movie {
   });
 }
 
+var imageUrl = 'https://image.tmdb.org/t/p/w1280';
 var movieList = [
   Movie(
       id: 1,
