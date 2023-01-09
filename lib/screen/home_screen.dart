@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
             return InkWell(
               onTap: (() {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const MovieDetailScreen();
+                  return MovieDetailScreen(movie: movie);
                 }));
               }),
               child: Card(
