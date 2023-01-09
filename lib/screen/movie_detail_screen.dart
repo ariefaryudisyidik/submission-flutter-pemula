@@ -7,6 +7,24 @@ class MovieDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxWidth <= 800) {
+          return DetailMobilePage(movie: movie);
+        } else {
+          return DetailWebPage(movie: movie);
+        }
+      },
+    );
+  }
+}
+
+class DetailMobilePage extends StatelessWidget {
+  final Movie movie;
+  const DetailMobilePage({required this.movie, super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -71,6 +89,92 @@ class MovieDetailScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class DetailWebPage extends StatefulWidget {
+  final Movie movie;
+  const DetailWebPage({required this.movie, super.key});
+
+  @override
+  State<StatefulWidget> createState() => _DetailWebPageState();
+}
+
+class _DetailWebPageState extends State<DetailWebPage> {
+  final _scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 64),
+          child: Center(
+            child: SizedBox(
+                width: screenWidth <= 1200 ? 800 : 1200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.network(
+                                imageUrl + widget.movie.backdropPath),
+                          ),
+                        ),
+                        const SizedBox(width: 32),
+                        Expanded(
+                            child: Card(
+                          child: Container(
+                              padding: const EdgeInsets.all(16),
+                              child: Stack(
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Image.network(
+                                          imageUrl + widget.movie.posterPath,
+                                          width: 120,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 32),
+                                      Text(
+                                        widget.movie.title,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            overflow: TextOverflow.ellipsis),
+                                        maxLines: 2,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(widget.movie.overview),
+                                    ],
+                                  ),
+                                  const Positioned(
+                                    right: 0,
+                                    child: WatchListButton(),
+                                  )
+                                ],
+                              )),
+                        )),
+                      ],
+                    )
+                  ],
+                )),
+          )),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
 

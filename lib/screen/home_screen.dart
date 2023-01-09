@@ -29,58 +29,77 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: SafeArea(
-        child: GridView.count(
-          padding: const EdgeInsets.all(16),
-          crossAxisCount: 2,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-          childAspectRatio: 0.7,
-          children: movieList.map((movie) {
-            return InkWell(
-              onTap: (() {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return MovieDetailScreen(movie: movie);
-                }));
-              }),
-              child: Card(
-                semanticContainer: true,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                        child: ClipRRect(
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(8)),
-                      child: Image.network(
-                        imageUrl + movie.posterPath,
-                        fit: BoxFit.cover,
-                      ),
-                    )),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: SizedBox(
-                        height: 44,
-                        child: Text(
-                          movie.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
-        ),
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth <= 600) {
+            return const MovieGrid(gridCount: 2);
+          } else if (constraints.maxWidth <= 1200) {
+            return const MovieGrid(gridCount: 4);
+          } else {
+            return const MovieGrid(gridCount: 6);
+          }
+        },
       ),
+    );
+  }
+}
+
+class MovieGrid extends StatelessWidget {
+  final int gridCount;
+
+  const MovieGrid({required this.gridCount, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      padding: const EdgeInsets.all(16),
+      crossAxisCount: gridCount,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+      childAspectRatio: 0.7,
+      children: movieList.map((movie) {
+        return InkWell(
+          onTap: (() {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return MovieDetailScreen(movie: movie);
+            }));
+          }),
+          child: Card(
+            semanticContainer: true,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                    child: ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(8)),
+                  child: Image.network(
+                    imageUrl + movie.posterPath,
+                    fit: BoxFit.cover,
+                  ),
+                )),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SizedBox(
+                    height: 44,
+                    child: Text(
+                      movie.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }
